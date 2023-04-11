@@ -1,2 +1,2 @@
-## Portable Personalization
-Useful stuff to clone to new Linux systems.
+## Bash Personalization
+Stuff to clone to new Linux systems.
