@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Add to ~/.bashrc
 #
 #if [ -f ~/.bash_kpmckay ]; then
