@@ -19,5 +19,5 @@ alias ll='ls -alF'
 alias h='history'                    
 
 if [ -f ~/.lsnvme.rc ]; then
-    . ~/.lsnvme
+    . ~/.lsnvme.rc
 fi
