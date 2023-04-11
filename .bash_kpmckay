@@ -19,3 +19,7 @@ fi
 alias lt='ls -lrt'
 alias ll='ls -alF'
 alias h='history'                    
+
+if [ -f ~/.lsnvme.rc ]; then
+    . ~/.lsnvme
+fi
