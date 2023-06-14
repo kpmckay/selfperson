@@ -21,6 +21,7 @@ function lsnvme() {
       [ -f "$dev/transport" ] && transport=$(cat "$dev/transport") || transport=$na
       [ -f "$dev/device/current_link_speed" ] && current_link_speed=$(cat "$dev/device/current_link_speed") || current_link_speed=$na
       [ -f "$dev/device/current_link_width" ] && current_link_width=$(cat "$dev/device/current_link_width") || current_link_width=$na
+      [ -f "$dev/device/label" ] && label=$(cat "$dev/device/label") || label=$na
 
       namespaces=0
       for nvme in ${dev}/nvme*; do
@@ -29,6 +30,7 @@ function lsnvme() {
 
       echo ""
       echo "   Controller (PCI Address)    : $controller ($address)"
+      echo "   Label                       : $label"
       echo "   Model                       : $model"
       echo "   Controller Type & Transport : $cntrltype over $transport"
       echo "   NUMA Node                   : $numa_node"
