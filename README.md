@@ -1,4 +1,4 @@
-My personal settings and Bash functions for new systems.
+My personal settings for new systems.
 <p align="right">
 <br>
 <b>"I run my own and I'm my own self person"</b><br>
