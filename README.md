@@ -1,4 +1,4 @@
-## A random collection of shiny (or once shiny) objects.
+## My personal settings for new systems.
 
 
 <p align="right">
