@@ -1,8 +1,4 @@
-# Add to ~/.bashrc
-#
-#if [ -f ~/.bash_kpmckay ]; then
-#    . ~/.bash_kpmckay
-#fi
+# Concatenate to ~/.bashrc
 
 if [ -x /usr/bin/tput ]; then
    colors="$(tput colors)"
@@ -16,8 +12,8 @@ fi
 
 alias lt='ls -lrt'
 alias ll='ls -alF'
-alias h='history'                    
+alias his='history'
 
-if [ -f ~/.lsnvme.rc ]; then
-    . ~/.lsnvme.rc
+if [ -f ~/.bashrc_ext/lsnvme.rc ]; then
+    . ~/.bashrc_extensions/lsnvme.rc
 fi
