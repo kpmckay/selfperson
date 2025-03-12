@@ -1,8 +1,10 @@
+#!/bin/bash
+
 function lsnvme() {
 
    if [ ! -d "/sys/class/nvme" ]; then
        echo "No NVMe devices found."
-       exit 1
+       return 1
    fi
 
    na="NA"

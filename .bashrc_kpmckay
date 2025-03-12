@@ -1,19 +1,9 @@
 # Concatenate to ~/.bashrc
 
-if [ -x /usr/bin/tput ]; then
-   colors="$(tput colors)"
-else
-   colors=
-fi
-
-if [ "$colors" -gt 1 ]; then
-   PS1='\[$(tput dim)$(tput setaf 4)\]\u@\h\[$(tput setaf 7)\]:\[$(tput setaf 6)\]\w\[$(tput setaf 3)\]\$\[$(tput sgr0)\] '
-fi
-
 alias lt='ls -lrt'
 alias ll='ls -alF'
 alias his='history'
 
-if [ -f ~/.bashrc_ext/lsnvme.rc ]; then
-    . ~/.bashrc_extensions/lsnvme.rc
+if [ -f ~/.bash_extensions/lsnvme ]; then
+    . ~/.bash_extensions/lsnvme
 fi
