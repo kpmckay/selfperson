@@ -1,9 +1,0 @@
-# Concatenate to ~/.bashrc
-
-alias lt='ls -lrt'
-alias ll='ls -alF'
-alias his='history'
-
-if [ -f ~/.bash_extensions/lsnvme ]; then
-    . ~/.bash_extensions/lsnvme
-fi
