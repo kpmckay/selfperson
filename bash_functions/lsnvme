@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function lsnvme() {
+
+   if [ ! -d "/sys/class/nvme" ]; then
+       echo "No NVMe devices found."
+       return 1
+   fi
+
+   na="NA"
+
+   for dev in /sys/class/nvme/*;
+   do
+
+      controller=$(basename "$dev")
+
+      [ -f "$dev/numa_node" ] && numa_node=$(cat "$dev/numa_node") || numa_node=$na
+      [ -f "$dev/firmware_rev" ] && firmware_rev=$(cat "$dev/firmware_rev") || firmware_rev=$na
+      [ -f "$dev/serial" ] && serial=$(cat "$dev/serial") || serial=$na
+      [ -f "$dev/address" ] && address=$(cat "$dev/address") || address=$na
+      [ -f "$dev/model" ] && model=$(cat "$dev/model") || model=$na
+      [ -f "$dev/cntrltype" ] && cntrltype=$(cat "$dev/cntrltype") || cntrltype=$na
+      [ -f "$dev/transport" ] && transport=$(cat "$dev/transport") || transport=$na
+      [ -f "$dev/device/current_link_speed" ] && current_link_speed=$(cat "$dev/device/current_link_speed") || current_link_speed=$na
+      [ -f "$dev/device/current_link_width" ] && current_link_width=$(cat "$dev/device/current_link_width") || current_link_width=$na
+      [ -f "$dev/device/label" ] && label=$(cat "$dev/device/label") || label=$na
+
+      namespaces=0
+      for nvme in ${dev}/nvme*; do
+         namespaces=$((namespaces + 1))
+      done
+
+      echo ""
+      echo "   Controller (PCI Address)    : $controller ($address)"
+      echo "   Label                       : $label"
+      echo "   Model                       : $model"
+      echo "   Controller Type & Transport : $cntrltype over $transport"
+      echo "   NUMA Node                   : $numa_node"
+      echo "   Link Information            : $current_link_speed x$current_link_width"
+      echo "   Serial Number               : $serial"
+      echo "   Firmware Revision           : $firmware_rev"
+      echo "   Attached Namespace Count    : $namespaces"
+
+      for nvme in ${dev}/nvme*; do
+
+         [ -f "$nvme/nsid" ] && nsid=$(cat "$nvme/nsid") || nsid=$na
+         [ -f "$nvme/size" ] && size=$(cat "$nvme/size") || size=$na
+         [ -f "$nvme/queue/hw_sector_size" ] && hw_sector_size=$(cat "$nvme/queue/hw_sector_size") || hw_sector_size=$na
+         [ -f "$nvme/queue/physical_block_size" ] && physical_block_size=$(cat "$nvme/queue/physical_block_size") || physical_block_size=$na
+         [ -f "$nvme/nguid" ] && nguid=$(cat "$nvme/nguid") || nguid=$na
+         [ -f "$nvme/uuid" ] && uuid=$(cat "$nvme/uuid") || uuid=$na
+         [ -f "$nvme/wwid" ] && wwid=$(cat "$nvme/wwid") || wwid=$na
+         
+         echo ""
+         echo "      Namespace $(basename $nvme) (nsid = $nsid)"
+         echo ""
+         echo "         Formatted / Physical Sector Size : $hw_sector_size / $physical_block_size"
+         echo "         Size in GB (512-Byte Sectors)    : $((($size*512)/(1000000000))) ($size)"
+         echo "         Globally Unique ID - NGUID       : $nguid"
+         echo "         Universally Unique ID - UUID     : $uuid"
+         echo "         Worldwide ID - WWID              : $wwid"
+         echo ""
+
+      done
+   done
+}

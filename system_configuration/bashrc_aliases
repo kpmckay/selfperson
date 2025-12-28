@@ -1,0 +1,3 @@
+alias lt='ls -lrt'
+alias ll='ls -alF'
+alias his='history'
