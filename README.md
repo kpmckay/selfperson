@@ -1,4 +1,4 @@
-My personal settings for new systems.
+My personal repository for blogging and assorted odds and ends.
 <p align="right">
 <br>
 <b>"I run my own and I'm my own self person"</b><br>
