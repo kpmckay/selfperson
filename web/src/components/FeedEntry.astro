@@ -1,0 +1,77 @@
+---
+interface Props {
+  date: Date;
+  title: string;
+  summary: string;
+  link: string;
+  type: 'blog' | 'external' | 'article' | 'project';
+}
+
+const { date, title, summary, link, type } = Astro.props;
+
+const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+};
+
+const getTypeLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    blog: 'Blog Post',
+    external: 'Article',
+    article: 'Article',
+    project: 'Project',
+  };
+  return labels[type] || type;
+};
+
+const getTypeColor = (type: string) => {
+  const colors: Record<string, string> = {
+    blog: 'bg-primary-700 text-white',
+    external: 'bg-primary-500 text-white',
+    article: 'bg-primary-500 text-white',
+    project: 'bg-primary-600 text-white',
+  };
+  return colors[type] || 'bg-primary-600 text-white';
+};
+---
+
+<article class="border-b border-primary-200 pb-6 mb-6 last:border-b-0">
+  <div class="flex items-start justify-between mb-2">
+    <time class="text-sm text-primary-500" datetime={date.toISOString()}>
+      {formatDate(date)}
+    </time>
+    <span class={`text-xs px-2 py-1 rounded ${getTypeColor(type)}`}>
+      {getTypeLabel(type)}
+    </span>
+  </div>
+
+  <h3 class="text-xl font-semibold mb-2">
+    <a
+      href={link}
+      target={type === 'blog' ? '_self' : '_blank'}
+      rel={type === 'blog' ? '' : 'noopener noreferrer'}
+      class="hover:text-primary-700 transition-colors"
+    >
+      {title}
+    </a>
+  </h3>
+
+  <p class="text-primary-700 leading-relaxed">
+    {summary}
+  </p>
+
+  <a
+    href={link}
+    target={type === 'blog' ? '_self' : '_blank'}
+    rel={type === 'blog' ? '' : 'noopener noreferrer'}
+    class="inline-flex items-center mt-3 text-sm text-primary-600 hover:text-primary-800 font-medium"
+  >
+    Read more
+    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </a>
+</article>

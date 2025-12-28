@@ -1,0 +1,36 @@
+---
+import Layout from '../components/Layout.astro';
+import FeedEntry from '../components/FeedEntry.astro';
+import { getCollection } from 'astro:content';
+
+// Get all feed entries and sort by date (newest first)
+const feedEntries = await getCollection('feed');
+const sortedEntries = feedEntries.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<Layout>
+  <div class="mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-primary-900 mb-2">Activity Feed</h1>
+    <p class="text-primary-600">Latest updates, articles, and projects</p>
+  </div>
+
+  <div class="space-y-0">
+    {sortedEntries.length === 0 ? (
+      <div class="text-center py-12 text-primary-500">
+        <p>No entries yet. Add your first entry to get started!</p>
+      </div>
+    ) : (
+      sortedEntries.map((entry) => (
+        <FeedEntry
+          date={entry.data.date}
+          title={entry.data.title}
+          summary={entry.data.summary}
+          link={entry.data.link}
+          type={entry.data.type}
+        />
+      ))
+    )}
+  </div>
+</Layout>
