@@ -5,13 +5,18 @@ import { getCollection } from 'astro:content';
 // Get blog posts for table of contents
 const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
 const sortedBlogPosts = blogPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Helper to add base path for assets
+const getAssetPath = (path: string) => {
+  return `${import.meta.env.BASE_URL}${path}`.replace(/\/+/g, '/');
+};
 ---
 
 <div class="p-6 md:p-8">
   <!-- Profile Picture -->
   <div class="flex justify-center mb-6">
     <img
-      src={siteConfig.profile.image}
+      src={getAssetPath(siteConfig.profile.image)}
       alt={siteConfig.name}
       class="w-32 h-32 rounded-full object-cover border-4 border-primary-200"
     />
@@ -102,7 +107,7 @@ const sortedBlogPosts = blogPosts.sort((a, b) => b.data.date.getTime() - a.data.
   <!-- Resume -->
   <div class="mb-8">
     <a
-      href={siteConfig.resume.url}
+      href={getAssetPath(siteConfig.resume.url)}
       target="_blank"
       rel="noopener noreferrer"
       class="block w-full text-center py-2 px-4 bg-primary-700 text-white rounded-lg hover:bg-primary-800 transition-colors font-medium"
