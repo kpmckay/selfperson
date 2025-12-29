@@ -6,7 +6,7 @@ const feedCollection = defineCollection({
     date: z.date(),
     title: z.string(),
     summary: z.string(),
-    link: z.string().url(),
+    link: z.string(),
     type: z.enum(['blog', 'external', 'article', 'project']),
   }),
 });
