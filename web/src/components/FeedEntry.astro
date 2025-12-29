@@ -5,9 +5,10 @@ interface Props {
   summary: string;
   link: string;
   type: 'blog' | 'external' | 'article' | 'project';
+  linkText?: string;
 }
 
-const { date, title, summary, link, type } = Astro.props;
+const { date, title, summary, link, type, linkText = 'Read more' } = Astro.props;
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -69,7 +70,7 @@ const getTypeColor = (type: string) => {
     rel={type === 'blog' ? '' : 'noopener noreferrer'}
     class="inline-flex items-center mt-3 text-sm text-primary-600 hover:text-primary-800 font-medium"
   >
-    Read more
+    {linkText}
     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
     </svg>
