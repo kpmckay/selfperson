@@ -57,32 +57,6 @@ const getAssetPath = (path: string) => {
     </div>
   )}
 
-  <!-- Publications -->
-  {siteConfig.publications.length > 0 && (
-    <div class="mb-8">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-primary-600 mb-3">
-        Publications
-      </h2>
-      <ul class="space-y-3">
-        {siteConfig.publications.map((pub) => (
-          <li>
-            <a
-              href={pub.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-sm text-primary-700 hover:text-primary-900 block"
-            >
-              <div class="font-medium">{pub.title}</div>
-              <div class="text-xs text-primary-500 mt-1">
-                {pub.venue} ({pub.year})
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
-
   <!-- Social Links -->
   <div class="mb-8">
     <h2 class="text-sm font-semibold uppercase tracking-wide text-primary-600 mb-3">

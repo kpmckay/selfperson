@@ -14,20 +14,4 @@ export const siteConfig = {
     github: 'https://github.com/kpmckay',
     twitter: 'https://twitter.com/readdisturbed',
   },
-
-  publications: [
-    {
-      title: 'Publication Title 1',
-      year: '2024',
-      venue: 'Conference or Journal Name',
-      url: 'https://example.com/publication1',
-    },
-    {
-      title: 'Publication Title 2',
-      year: '2023',
-      venue: 'Conference or Journal Name',
-      url: 'https://example.com/publication2',
-    },
-    // Add more publications here
-  ],
 };
