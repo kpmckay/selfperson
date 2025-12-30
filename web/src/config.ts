@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: 'Your Name',
-  title: 'Your Name - Technology Professional',
+  name: 'Keith McKay',
+  title: 'Keith McKay',
   description: 'Personal website and blog',
 
   profile: {
@@ -10,9 +10,9 @@ export const siteConfig = {
   },
 
   social: {
-    linkedin: 'https://linkedin.com/in/yourprofile',
-    github: 'https://github.com/yourusername',
-    twitter: 'https://twitter.com/yourhandle',
+    linkedin: 'https://linkedin.com/in/kpmckay',
+    github: 'https://github.com/kpmckay',
+    twitter: 'https://twitter.com/readdisturbed',
   },
 
   publications: [
