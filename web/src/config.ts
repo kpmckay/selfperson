@@ -13,12 +13,6 @@ export const siteConfig = {
     linkedin: 'https://linkedin.com/in/yourprofile',
     github: 'https://github.com/yourusername',
     twitter: 'https://twitter.com/yourhandle',
-    email: 'your.email@example.com',
-  },
-
-  resume: {
-    url: '/resume.pdf',
-    label: 'Download Resume',
   },
 
   publications: [
