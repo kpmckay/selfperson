@@ -5,4 +5,5 @@ summary: "I'm excited to launch my new personal website! This will be a place wh
 link: "/blog/welcome"
 type: "blog"
 linkText: "Read the full post"
+tag: "Blog Post"
 ---

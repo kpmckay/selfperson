@@ -6,9 +6,10 @@ interface Props {
   link: string;
   type: 'blog' | 'external' | 'article' | 'project';
   linkText?: string;
+  tag?: string;
 }
 
-const { date, title, summary, link, type, linkText = 'Read more' } = Astro.props;
+const { date, title, summary, link, type, linkText = 'Read more', tag } = Astro.props;
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -18,7 +19,12 @@ const formatDate = (date: Date) => {
   }).format(date);
 };
 
-const getTypeLabel = (type: string) => {
+const getTypeLabel = (type: string, customTag?: string) => {
+  // Use custom tag if provided, otherwise fall back to default labels
+  if (customTag) {
+    return customTag;
+  }
+
   const labels: Record<string, string> = {
     blog: 'Blog Post',
     external: 'Article',
@@ -45,7 +51,7 @@ const getTypeColor = (type: string) => {
       {formatDate(date)}
     </time>
     <span class={`text-xs px-2 py-1 rounded ${getTypeColor(type)}`}>
-      {getTypeLabel(type)}
+      {getTypeLabel(type, tag)}
     </span>
   </div>
 

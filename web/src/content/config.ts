@@ -9,6 +9,7 @@ const feedCollection = defineCollection({
     link: z.string(),
     type: z.enum(['blog', 'external', 'article', 'project']),
     linkText: z.string().optional().default('Read more'),
+    tag: z.string().optional(),
   }),
 });
 
