@@ -1,4 +1,6 @@
 ---
+import { marked } from 'marked';
+
 interface Props {
   date: Date;
   title: string;
@@ -17,6 +19,15 @@ const formatDate = (date: Date) => {
     day: 'numeric',
   }).format(date);
 };
+
+// Configure marked to handle inline markdown
+marked.setOptions({
+  breaks: true,  // Convert line breaks to <br>
+  gfm: true,     // GitHub Flavored Markdown
+});
+
+// Render markdown in summary
+const renderedSummary = marked.parseInline(summary);
 ---
 
 <article class="border-b border-primary-200 pb-6 mb-6 last:border-b-0">
@@ -46,9 +57,7 @@ const formatDate = (date: Date) => {
     )}
   </h3>
 
-  <p class="text-primary-700 leading-relaxed">
-    {summary}
-  </p>
+  <p class="text-primary-700 leading-relaxed markdown-content" set:html={renderedSummary}></p>
 
   {link && (
     <a
@@ -64,3 +73,29 @@ const formatDate = (date: Date) => {
     </a>
   )}
 </article>
+
+<style>
+  .markdown-content :global(a) {
+    color: rgb(37 99 235); /* text-primary-600 equivalent */
+    text-decoration: underline;
+    transition: color 0.2s;
+  }
+
+  .markdown-content :global(a:hover) {
+    color: rgb(29 78 216); /* text-primary-800 equivalent */
+  }
+
+  .markdown-content :global(strong) {
+    font-weight: 600;
+  }
+
+  .markdown-content :global(em) {
+    font-style: italic;
+  }
+
+  .markdown-content :global(br) {
+    display: block;
+    content: "";
+    margin-top: 0.5em;
+  }
+</style>
