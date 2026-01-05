@@ -1,10 +1,5 @@
 ---
 import { siteConfig } from '../config';
-import { getCollection } from 'astro:content';
-
-// Get recent feed entries for table of contents
-const feedEntries = await getCollection('feed');
-const sortedFeedEntries = feedEntries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 // Helper to add base path for assets
 const getAssetPath = (path: string) => {
@@ -33,29 +28,6 @@ const getAssetPath = (path: string) => {
       {siteConfig.profile.bio}
     </p>
   </div>
-
-  <!-- Recent Posts -->
-  {sortedFeedEntries.length > 0 && (
-    <div class="mb-8">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-primary-600 mb-3">
-        Recent Posts
-      </h2>
-      <ul class="space-y-2">
-        {sortedFeedEntries.slice(0, 5).map((entry) => (
-          <li>
-            <a
-              href={entry.data.link}
-              target={entry.data.type === 'blog' ? '_self' : '_blank'}
-              rel={entry.data.type === 'blog' ? '' : 'noopener noreferrer'}
-              class="text-sm text-primary-700 hover:text-primary-900 block truncate"
-            >
-              {entry.data.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
 
   <!-- Social Links -->
   <div class="mb-8">
