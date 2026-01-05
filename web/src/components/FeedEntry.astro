@@ -3,7 +3,7 @@ interface Props {
   date: Date;
   title: string;
   summary: string;
-  link: string;
+  link?: string;
   type: 'blog' | 'external' | 'article' | 'project';
   linkText?: string;
   tag?: string;
@@ -56,29 +56,35 @@ const getTypeColor = (type: string) => {
   </div>
 
   <h3 class="text-xl font-semibold mb-2">
-    <a
-      href={link}
-      target={type === 'blog' ? '_self' : '_blank'}
-      rel={type === 'blog' ? '' : 'noopener noreferrer'}
-      class="hover:text-primary-700 transition-colors"
-    >
-      {title}
-    </a>
+    {link ? (
+      <a
+        href={link}
+        target={type === 'blog' ? '_self' : '_blank'}
+        rel={type === 'blog' ? '' : 'noopener noreferrer'}
+        class="hover:text-primary-700 transition-colors"
+      >
+        {title}
+      </a>
+    ) : (
+      <span>{title}</span>
+    )}
   </h3>
 
   <p class="text-primary-700 leading-relaxed">
     {summary}
   </p>
 
-  <a
-    href={link}
-    target={type === 'blog' ? '_self' : '_blank'}
-    rel={type === 'blog' ? '' : 'noopener noreferrer'}
-    class="inline-flex items-center mt-3 text-sm text-primary-600 hover:text-primary-800 font-medium"
-  >
-    {linkText}
-    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-    </svg>
-  </a>
+  {link && (
+    <a
+      href={link}
+      target={type === 'blog' ? '_self' : '_blank'}
+      rel={type === 'blog' ? '' : 'noopener noreferrer'}
+      class="inline-flex items-center mt-3 text-sm text-primary-600 hover:text-primary-800 font-medium"
+    >
+      {linkText}
+      <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  )}
 </article>

@@ -23,31 +23,41 @@ export async function GET(context) {
 
     // Map your feed collection entries to RSS items
     items: sortedEntries.map((entry) => {
-      // Determine if the link is external or internal
-      const isExternal = entry.data.link.startsWith('http://') ||
-                        entry.data.link.startsWith('https://');
-
-      // For internal links, prepend the site URL with base path
-      // For external links, use as-is
       let link;
-      if (isExternal) {
-        link = entry.data.link;
-      } else {
-        // Remove leading slash and append to site URL
-        const cleanPath = entry.data.link.replace(/^\//, '');
-        link = siteUrl.endsWith('/')
-          ? `${siteUrl}${cleanPath}`
-          : `${siteUrl}/${cleanPath}`;
+
+      // Only process link if it exists
+      if (entry.data.link) {
+        // Determine if the link is external or internal
+        const isExternal = entry.data.link.startsWith('http://') ||
+                          entry.data.link.startsWith('https://');
+
+        // For internal links, prepend the site URL with base path
+        // For external links, use as-is
+        if (isExternal) {
+          link = entry.data.link;
+        } else {
+          // Remove leading slash and append to site URL
+          const cleanPath = entry.data.link.replace(/^\//, '');
+          link = siteUrl.endsWith('/')
+            ? `${siteUrl}${cleanPath}`
+            : `${siteUrl}/${cleanPath}`;
+        }
       }
 
-      return {
+      const item = {
         title: entry.data.title,
         description: entry.data.summary,
-        link: link,
         pubDate: entry.data.date,
         // Add categories based on type
         categories: [entry.data.type],
       };
+
+      // Only add link if it exists
+      if (link) {
+        item.link = link;
+      }
+
+      return item;
     }),
 
     // Customize XML namespace for additional features
