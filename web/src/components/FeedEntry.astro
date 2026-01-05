@@ -4,12 +4,11 @@ interface Props {
   title: string;
   summary: string;
   link?: string;
-  type: 'blog' | 'external' | 'article' | 'project';
   linkText?: string;
   tag?: string;
 }
 
-const { date, title, summary, link, type, linkText = 'Read more', tag } = Astro.props;
+const { date, title, summary, link, linkText = 'Read more', tag } = Astro.props;
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -18,31 +17,6 @@ const formatDate = (date: Date) => {
     day: 'numeric',
   }).format(date);
 };
-
-const getTypeLabel = (type: string, customTag?: string) => {
-  // Use custom tag if provided, otherwise fall back to default labels
-  if (customTag) {
-    return customTag;
-  }
-
-  const labels: Record<string, string> = {
-    blog: 'Blog Post',
-    external: 'Article',
-    article: 'Article',
-    project: 'Project',
-  };
-  return labels[type] || type;
-};
-
-const getTypeColor = (type: string) => {
-  const colors: Record<string, string> = {
-    blog: 'bg-primary-700 text-white',
-    external: 'bg-primary-500 text-white',
-    article: 'bg-primary-500 text-white',
-    project: 'bg-primary-600 text-white',
-  };
-  return colors[type] || 'bg-primary-600 text-white';
-};
 ---
 
 <article class="border-b border-primary-200 pb-6 mb-6 last:border-b-0">
@@ -50,17 +24,19 @@ const getTypeColor = (type: string) => {
     <time class="text-sm text-primary-500" datetime={date.toISOString()}>
       {formatDate(date)}
     </time>
-    <span class={`text-xs px-2 py-1 rounded ${getTypeColor(type)}`}>
-      {getTypeLabel(type, tag)}
-    </span>
+    {tag && (
+      <span class="text-xs px-2 py-1 rounded bg-primary-600 text-white">
+        {tag}
+      </span>
+    )}
   </div>
 
   <h3 class="text-xl font-semibold mb-2">
     {link ? (
       <a
         href={link}
-        target={type === 'blog' ? '_self' : '_blank'}
-        rel={type === 'blog' ? '' : 'noopener noreferrer'}
+        target="_blank"
+        rel="noopener noreferrer"
         class="hover:text-primary-700 transition-colors"
       >
         {title}
@@ -77,8 +53,8 @@ const getTypeColor = (type: string) => {
   {link && (
     <a
       href={link}
-      target={type === 'blog' ? '_self' : '_blank'}
-      rel={type === 'blog' ? '' : 'noopener noreferrer'}
+      target="_blank"
+      rel="noopener noreferrer"
       class="inline-flex items-center mt-3 text-sm text-primary-600 hover:text-primary-800 font-medium"
     >
       {linkText}

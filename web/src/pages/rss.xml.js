@@ -48,13 +48,16 @@ export async function GET(context) {
         title: entry.data.title,
         description: entry.data.summary,
         pubDate: entry.data.date,
-        // Add categories based on type
-        categories: [entry.data.type],
       };
 
       // Only add link if it exists
       if (link) {
         item.link = link;
+      }
+
+      // Add tag as category if it exists
+      if (entry.data.tag) {
+        item.categories = [entry.data.tag];
       }
 
       return item;
