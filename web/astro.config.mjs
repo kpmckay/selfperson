@@ -3,8 +3,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://kpmckay.github.io',
-  base: '/selfperson',
+  site: 'https://kpmckay.io',
   integrations: [tailwind()],
   markdown: {
     shikiConfig: {
