@@ -5,4 +5,6 @@ summary: "I really enjoy these focused topic technical books. They're much more 
 tag: "Book Review"
 link: "https://www.manning.com/books/latency"
 linkText: "Latency ordering link (no affiliation)"  
+images:
+ - /images/latency_book.jpg
 ---

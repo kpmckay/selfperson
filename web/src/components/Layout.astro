@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { siteConfig } from '../config';
 import Sidebar from './Sidebar.astro';
+import Lightbox from './Lightbox.astro';
 
 interface Props {
   title?: string;
@@ -54,5 +55,6 @@ const getAssetPath = (path: string) => {
         </main>
       </div>
     </div>
+    <Lightbox />
   </body>
 </html>

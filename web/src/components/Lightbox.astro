@@ -1,0 +1,70 @@
+---
+// Lightbox component for displaying full-size images in an overlay
+---
+
+<div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80">
+  <button
+    id="lightbox-close"
+    class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+    aria-label="Close lightbox"
+  >
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <img
+    id="lightbox-image"
+    src=""
+    alt=""
+    class="max-h-[90vh] max-w-[90vw] object-contain"
+  />
+</div>
+
+<script>
+  function initLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    if (!lightbox || !lightboxImage || !lightboxClose) return;
+
+    // Open lightbox when clicking an image with data-lightbox attribute
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.hasAttribute('data-lightbox')) {
+        const src = target.getAttribute('data-lightbox');
+        if (src) {
+          lightboxImage.src = src;
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+        }
+      }
+    });
+
+    // Close lightbox when clicking the close button or backdrop
+    const closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      lightboxImage.src = '';
+    };
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // Initialize on page load and after Astro page transitions
+  initLightbox();
+  document.addEventListener('astro:after-swap', initLightbox);
+</script>

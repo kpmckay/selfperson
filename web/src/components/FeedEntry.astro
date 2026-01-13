@@ -8,9 +8,14 @@ interface Props {
   link?: string;
   linkText?: string;
   tag?: string;
+  images?: string[];
 }
 
-const { date, title, summary, link, linkText = 'Read more', tag } = Astro.props;
+const { date, title, summary, link, linkText = 'Read more', tag, images } = Astro.props;
+
+const getAssetPath = (path: string) => {
+  return `${import.meta.env.BASE_URL}${path}`.replace(/\/+/g, '/');
+};
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat('en-US', {
@@ -56,6 +61,19 @@ const renderedSummary = marked.parseInline(summary);
       <span>{title}</span>
     )}
   </h3>
+
+  {images && images.length > 0 && (
+    <div class="flex flex-wrap gap-2 mb-3">
+      {images.map((src) => (
+        <img
+          src={getAssetPath(src)}
+          alt=""
+          class="h-24 w-auto rounded object-cover cursor-pointer hover:opacity-90 transition-opacity"
+          data-lightbox={getAssetPath(src)}
+        />
+      ))}
+    </div>
+  )}
 
   <p class="text-primary-700 leading-relaxed markdown-content" set:html={renderedSummary}></p>
 

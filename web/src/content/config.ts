@@ -9,6 +9,7 @@ const feedCollection = defineCollection({
     link: z.string().optional(),
     linkText: z.string().optional().default('Read more'),
     tag: z.string().optional(),
+    images: z.array(z.string()).optional(),
   }),
 });
 
