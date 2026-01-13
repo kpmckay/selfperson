@@ -1,4 +1,4 @@
-My personal repository for blogging and assorted odds and ends.
+Repository for my personal website and related content.
 <p align="right">
 <br>
 <b>"I run my own and I'm my own self person"</b><br>
