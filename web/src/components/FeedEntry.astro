@@ -63,12 +63,12 @@ const renderedSummary = marked.parseInline(summary);
   </h3>
 
   {images && images.length > 0 && (
-    <div class="flex flex-wrap gap-2 mb-3">
+    <div class="flex flex-wrap justify-center gap-2 mb-3">
       {images.map((src) => (
         <img
           src={getAssetPath(src)}
           alt=""
-          class="h-24 w-auto rounded object-cover cursor-pointer hover:opacity-90 transition-opacity"
+          class="h-36 w-auto rounded object-cover cursor-pointer hover:opacity-90 transition-opacity"
           data-lightbox={getAssetPath(src)}
         />
       ))}
