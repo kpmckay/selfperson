@@ -48,18 +48,7 @@ const renderedSummary = marked.parseInline(summary);
   </div>
 
   <h3 class="text-xl font-semibold mb-2">
-    {link ? (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-blue-600 hover:text-blue-800 transition-colors"
-      >
-        {title}
-      </a>
-    ) : (
-      <span>{title}</span>
-    )}
+    {title}
   </h3>
 
   {images && images.length > 0 && (
