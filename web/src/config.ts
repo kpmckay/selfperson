@@ -13,6 +13,6 @@ export const siteConfig = {
     linkedin: 'https://linkedin.com/in/kpmckay',
     github: 'https://github.com/kpmckay',
     twitter: 'https://twitter.com/readdisturbed',
-    blogger: 'https://keefmck.blogspot.com/',
+    blogger: 'https://blog.kpmckay.io',
   },
 };
