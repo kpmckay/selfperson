@@ -70,7 +70,23 @@
   }
 
   .prose img {
-    @apply rounded-lg my-6;
+    @apply rounded-lg max-h-96 w-auto cursor-zoom-in;
+  }
+
+  .prose figure {
+    @apply my-6 flex flex-col items-center;
+  }
+
+  .prose .figure-row {
+    @apply my-6 flex flex-wrap gap-3 justify-center;
+  }
+
+  .prose .figure-row figure {
+    @apply my-0;
+  }
+
+  .prose figcaption {
+    @apply text-sm text-primary-400 mt-2 text-center;
   }
 
   .prose blockquote {

@@ -13,6 +13,17 @@ const feedCollection = defineCollection({
   }),
 });
 
+const articlesCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    date: z.date(),
+    title: z.string(),
+    description: z.string(),
+    tag: z.string().optional(),
+  }),
+});
+
 export const collections = {
   feed: feedCollection,
+  articles: articlesCollection,
 };

@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+h1 { font-size: 24px; color: #1a1a1a; }
+h2 { font-size: 18px; margin-bottom: 20px; color: #444; }
+
+.hidden { display: none !important; }
+
+/* Buttons */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-primary { background: #2563eb; color: white; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+.btn:not(.btn-primary):not(.btn-danger) { background: #e5e5e5; color: #333; }
+.btn:not(.btn-primary):not(.btn-danger):hover { background: #d5d5d5; }
+.btn-danger { background: #dc2626; color: white; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-small { padding: 5px 10px; font-size: 12px; }
+
+/* Article List */
+.post-item {
+  background: white;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  border: 1px solid #e5e5e5;
+}
+.post-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.post-info { display: flex; gap: 10px; margin-bottom: 4px; align-items: center; }
+.post-date { font-size: 13px; color: #666; }
+.post-tag { font-size: 11px; padding: 2px 8px; background: #2563eb; color: white; border-radius: 4px; }
+.post-title { font-weight: 600; color: #2563eb; margin-bottom: 3px; }
+.post-description { font-size: 13px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.empty-state { color: #888; font-style: italic; padding: 20px; text-align: center; }
+
+/* Form */
+#editor-section {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+.form-row { display: flex; gap: 20px; }
+.form-row .form-group { flex: 1; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #444; }
+.form-group .hint { font-weight: 400; font-size: 12px; color: #888; }
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.form-group textarea#body {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 500px;
+  line-height: 1.7;
+}
+.form-group textarea:not(#body) { resize: vertical; }
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+.form-group small { display: block; margin-top: 6px; color: #888; font-size: 12px; }
+.form-group small code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+/* Body toolbar (label + Insert Image button side by side) */
+.body-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.body-toolbar label[for="body"] {
+  margin-bottom: 0;
+}
+
+/* Insert Image label-as-button — hides the file input */
+.insert-image-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  transition: background 0.2s;
+  user-select: none;
+  margin-bottom: 0 !important;
+}
+.insert-image-label:hover { background: #d5d5d5; }
+.insert-image-label input[type="file"] { display: none; }
+
+/* Image strip (below body textarea) */
+#image-strip { margin-top: 12px; }
+
+.strip-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.strip-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.strip-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 80px;
+}
+
+.strip-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.strip-insert {
+  width: 100%;
+  padding: 3px 0;
+  font-size: 11px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.strip-insert:hover { background: #1d4ed8; }
+
+.strip-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  background: rgba(220,38,38,0.85);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.strip-remove:hover { background: #b91c1c; }

@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+import { siteConfig } from '../../config';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((article) => {
+    // Normalize slug: strip trailing /index for directory-based entries
+    const slug = article.slug.replace(/\/index$/, '');
+    return { params: { slug }, props: { article } };
+  });
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+const { title, date, description, tag } = article.data;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout title={`${title} — ${siteConfig.name}`} description={description}>
+  <article>
+    <header class="mb-8 pb-6 border-b border-primary-200">
+      <div class="flex items-center gap-3 mb-3">
+        <time datetime={date.toISOString()} class="text-sm text-primary-500">{formattedDate}</time>
+        {tag && (
+          <span class="text-xs font-medium px-2 py-1 rounded-full bg-primary-600 text-white">
+            {tag}
+          </span>
+        )}
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold text-primary-900">{title}</h1>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-primary-200">
+      <a href="/" class="text-sm font-medium hover:text-primary-900">← Back to feed</a>
+    </div>
+  </article>
+</Layout>
+
+<script>
+  // Wire all prose images into the existing lightbox
+  function initArticleImages() {
+    document.querySelectorAll('.prose img').forEach((img) => {
+      const el = img as HTMLImageElement;
+      if (!el.hasAttribute('data-lightbox')) {
+        el.setAttribute('data-lightbox', el.src);
+        el.style.cursor = 'zoom-in';
+      }
+    });
+  }
+
+  initArticleImages();
+  document.addEventListener('astro:after-swap', initArticleImages);
+</script>
