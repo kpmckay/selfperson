@@ -50,12 +50,17 @@
           <div class="form-group">
             <div class="body-toolbar">
               <label for="body">Body *</label>
-              <label class="btn btn-small insert-image-label" title="Upload and insert image at cursor">
-                &#128247; Insert Image
-                <input type="file" id="inline-image-input" accept="image/*">
-              </label>
+              <div class="toolbar-right">
+                <div class="view-tabs">
+                  <button type="button" id="edit-tab" class="tab-btn active">Edit</button>
+                  <button type="button" id="preview-tab" class="tab-btn">Preview</button>
+                </div>
+                <button type="button" id="insert-image-btn">&#128247; Insert Image</button>
+                <input type="file" id="inline-image-input" accept="image/*" style="display:none">
+              </div>
             </div>
             <textarea id="body" name="body" rows="28" spellcheck="true" placeholder="Write your article in Markdown…"></textarea>
+            <div id="preview-pane" class="hidden"></div>
             <small>Type a caption between the brackets: <code>![A snowy mountain](./images/photo.jpg)</code></small>
             <div id="image-strip"></div>
           </div>
@@ -70,6 +75,7 @@
     </main>
   </div>
 
+  <script src="/marked.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

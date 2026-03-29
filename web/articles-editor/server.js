@@ -15,6 +15,11 @@ if (!fs.existsSync(ARTICLES_DIR)) {
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve marked from the project's node_modules (no CDN dependency)
+app.get('/marked.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'node_modules', 'marked', 'lib', 'marked.umd.js'));
+});
+
 // Serve co-located article images for editor preview
 app.get('/images/:slug/:filename', (req, res) => {
   const filepath = path.join(
@@ -199,6 +204,11 @@ app.delete('/api/articles/:slug/images/:filename', (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Return JSON for any unhandled errors (e.g. multer validation failures)
+app.use((err, req, res, next) => {
+  res.status(500).json({ error: err.message });
 });
 
 app.listen(PORT, () => {

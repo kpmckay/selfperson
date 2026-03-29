@@ -12,8 +12,12 @@ const newArticleBtn = document.getElementById('new-article-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 const deleteBtn = document.getElementById('delete-btn');
 const inlineImageInput = document.getElementById('inline-image-input');
+const insertImageBtn = document.getElementById('insert-image-btn');
 const bodyTextarea = document.getElementById('body');
+const previewPane = document.getElementById('preview-pane');
 const imageStrip = document.getElementById('image-strip');
+const editTab = document.getElementById('edit-tab');
+const previewTab = document.getElementById('preview-tab');
 
 document.addEventListener('DOMContentLoaded', () => {
   loadArticles();
@@ -21,7 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
   cancelBtn.addEventListener('click', showArticleList);
   articleForm.addEventListener('submit', handleSubmit);
   deleteBtn.addEventListener('click', handleDelete);
+  insertImageBtn.addEventListener('click', handleInsertImageClick);
   inlineImageInput.addEventListener('change', handleInlineImageUpload);
+  editTab.addEventListener('click', showEditMode);
+  previewTab.addEventListener('click', showPreviewMode);
 });
 
 // ── API ────────────────────────────────────────────────────────────────────
@@ -55,8 +62,8 @@ async function saveArticle(data, slug) {
 
 async function uploadImage(file, slug) {
   const formData = new FormData();
+  formData.append('slug', slug); // must come before the file so multer can read it
   formData.append('image', file);
-  formData.append('slug', slug);
   const res = await fetch('/api/upload', { method: 'POST', body: formData });
   const result = await res.json();
   if (!res.ok) throw new Error(result.error);
@@ -107,6 +114,7 @@ function showNewArticleForm() {
   deleteBtn.classList.add('hidden');
   document.getElementById('date').value = new Date().toISOString().split('T')[0];
   renderImageStrip([]);
+  showEditMode();
   articleListSection.classList.add('hidden');
   editorSection.classList.remove('hidden');
   document.getElementById('title').focus();
@@ -129,7 +137,7 @@ async function editArticle(slug) {
   bodyTextarea.value = article.body || '';
 
   renderImageStrip(article.images || []);
-
+  showEditMode();
   articleListSection.classList.add('hidden');
   editorSection.classList.remove('hidden');
 }
@@ -193,26 +201,33 @@ async function handleDelete() {
   }
 }
 
+function handleInsertImageClick() {
+  const titleInput = document.getElementById('title');
+  if (!titleInput.value.trim()) {
+    titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    titleInput.focus();
+    titleInput.classList.add('field-required');
+    setTimeout(() => titleInput.classList.remove('field-required'), 2500);
+    return;
+  }
+  inlineImageInput.click();
+}
+
 async function handleInlineImageUpload() {
   const file = inlineImageInput.files[0];
   if (!file) return;
 
-  const date = document.getElementById('date').value;
-  const title = document.getElementById('title').value;
-  if (!date || !title) {
-    alert('Fill in the date and title before uploading images.');
-    inlineImageInput.value = '';
-    return;
-  }
+  const slug = currentSlug || deriveSlug(
+    document.getElementById('date').value,
+    document.getElementById('title').value
+  );
 
-  const slug = currentSlug || deriveSlug(date, title);
-  const label = document.querySelector('.insert-image-label');
-  label.textContent = 'Uploading…';
+  insertImageBtn.disabled = true;
+  insertImageBtn.textContent = 'Uploading…';
 
   try {
     const result = await uploadImage(file, slug);
     insertImageAtCursor(result.markdown, '');
-    // Refresh the image strip
     try {
       const article = await loadArticle(slug);
       renderImageStrip(article.images || []);
@@ -222,8 +237,8 @@ async function handleInlineImageUpload() {
   } catch (err) {
     alert('Upload failed: ' + err.message);
   } finally {
-    label.innerHTML = '&#128247; Insert Image<input type="file" id="inline-image-input" accept="image/*">';
-    document.getElementById('inline-image-input').addEventListener('change', handleInlineImageUpload);
+    insertImageBtn.disabled = false;
+    insertImageBtn.textContent = '📷 Insert Image';
     inlineImageInput.value = '';
   }
 }
@@ -244,6 +259,98 @@ async function handleRemoveImage(filename) {
   } catch (err) {
     alert('Failed to remove image: ' + err.message);
   }
+}
+
+// ── Preview ────────────────────────────────────────────────────────────────
+
+function showEditMode() {
+  bodyTextarea.classList.remove('hidden');
+  previewPane.classList.add('hidden');
+  editTab.classList.add('active');
+  previewTab.classList.remove('active');
+  insertImageBtn.disabled = false;
+}
+
+function showPreviewMode() {
+  const slug = currentSlug || deriveSlug(
+    document.getElementById('date').value,
+    document.getElementById('title').value
+  );
+  previewPane.innerHTML = renderMarkdown(bodyTextarea.value, slug);
+  // Open images full-size in a new tab on click
+  previewPane.querySelectorAll('img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => window.open(img.src, '_blank'));
+  });
+  bodyTextarea.classList.add('hidden');
+  previewPane.classList.remove('hidden');
+  previewTab.classList.add('active');
+  editTab.classList.remove('active');
+  insertImageBtn.disabled = true;
+}
+
+function renderMarkdown(text, slug) {
+  const raw = marked.parse(text);
+  const container = document.createElement('div');
+  container.innerHTML = raw;
+
+  // Rewrite ./images/ paths to the editor's serving route
+  container.querySelectorAll('img').forEach(img => {
+    const src = img.getAttribute('src') || '';
+    if (src.startsWith('./images/')) {
+      img.src = `/images/${slug}/${src.slice('./images/'.length)}`;
+    }
+  });
+
+  // Mirror the rehype plugin: convert image-only <p> elements to <figure>,
+  // and group consecutive ones into a .figure-row
+  const nodes = [...container.childNodes];
+  let group = [];
+
+  function flushGroup() {
+    if (group.length === 0) return;
+    const elements = group.map(p => {
+      const img = p.querySelector('img');
+      const alt = img.getAttribute('alt') || '';
+      const figure = document.createElement('figure');
+      figure.appendChild(img.cloneNode(true));
+      if (alt) {
+        const cap = document.createElement('figcaption');
+        cap.textContent = alt;
+        figure.appendChild(cap);
+      }
+      return figure;
+    });
+    if (elements.length === 1) {
+      group[0].replaceWith(elements[0]);
+    } else {
+      const row = document.createElement('div');
+      row.className = 'figure-row';
+      elements.forEach(f => row.appendChild(f));
+      group[0].replaceWith(row);
+      group.slice(1).forEach(p => p.remove());
+    }
+    group = [];
+  }
+
+  nodes.forEach(node => {
+    if (isImgOnlyParagraph(node)) {
+      group.push(node);
+    } else {
+      flushGroup();
+    }
+  });
+  flushGroup();
+
+  return container.innerHTML;
+}
+
+function isImgOnlyParagraph(node) {
+  if (!node || node.tagName !== 'P') return false;
+  const meaningful = [...node.childNodes].filter(
+    c => !(c.nodeType === Node.TEXT_NODE && !c.textContent.trim()) && c.nodeName !== 'BR'
+  );
+  return meaningful.length === 1 && meaningful[0].tagName === 'IMG';
 }
 
 // ── Utilities ──────────────────────────────────────────────────────────────
