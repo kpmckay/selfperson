@@ -1,19 +1,22 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 
-// Rehype plugin: convert standalone image paragraphs into <figure>/<figcaption>
-// elements. Consecutive image paragraphs are wrapped in a <div class="figure-row">
-// so they sit side-by-side and wrap when space runs out.
+// Rehype plugin: convert image-only paragraphs into <figure>/<figcaption> elements.
+// Handles two cases:
+//   1. <p><img><img>…</p>  — Astro collapses adjacent lines into one <p>
+//   2. Consecutive <p><img></p> blocks separated by blank lines
+// In both cases multiple images are wrapped in <div class="figure-row">.
 function rehypeFigure() {
   return function (tree) {
-    // Returns the single <img> if this node is a paragraph containing only an
-    // image (plus optional whitespace/br nodes), otherwise null.
-    function extractImg(node) {
+    // Returns all <img> nodes if this paragraph contains only images, else null.
+    function extractImgs(node) {
       if (node.type !== 'element' || node.tagName !== 'p') return null;
       const meaningful = node.children.filter(
         c => !(c.type === 'text' && !c.value.trim()) && c.tagName !== 'br'
       );
-      if (meaningful.length === 1 && meaningful[0].tagName === 'img') return meaningful[0];
+      if (meaningful.length > 0 && meaningful.every(c => c.tagName === 'img')) {
+        return meaningful;
+      }
       return null;
     }
 
@@ -31,37 +34,42 @@ function rehypeFigure() {
       return { type: 'element', tagName: 'figure', properties: {}, children };
     }
 
+    function toRow(figures) {
+      return figures.length === 1 ? figures[0] : {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['figure-row'] },
+        children: figures
+      };
+    }
+
     function walk(node) {
       if (!node.children) return;
       const next = [];
       let i = 0;
       while (i < node.children.length) {
-        // Skip bare whitespace text nodes between block elements
         if (node.children[i].type === 'text' && !node.children[i].value.trim()) {
           i++; continue;
         }
-        const img = extractImg(node.children[i]);
-        if (img) {
-          // Collect all consecutive image paragraphs into one group
-          const figures = [toFigure(img)];
-          i++;
-          while (i < node.children.length) {
-            if (node.children[i].type === 'text' && !node.children[i].value.trim()) {
-              i++; continue;
-            }
-            const nextImg = extractImg(node.children[i]);
-            if (nextImg) { figures.push(toFigure(nextImg)); i++; }
-            else break;
-          }
-          if (figures.length === 1) {
-            next.push(figures[0]);
+        const imgs = extractImgs(node.children[i]);
+        if (imgs) {
+          if (imgs.length > 1) {
+            // Multiple images already in one paragraph — make a row directly
+            next.push(toRow(imgs.map(toFigure)));
+            i++;
           } else {
-            next.push({
-              type: 'element',
-              tagName: 'div',
-              properties: { className: ['figure-row'] },
-              children: figures
-            });
+            // Single-image paragraph — collect consecutive ones into a row
+            const figures = [toFigure(imgs[0])];
+            i++;
+            while (i < node.children.length) {
+              if (node.children[i].type === 'text' && !node.children[i].value.trim()) {
+                i++; continue;
+              }
+              const nextImgs = extractImgs(node.children[i]);
+              if (nextImgs?.length === 1) { figures.push(toFigure(nextImgs[0])); i++; }
+              else break;
+            }
+            next.push(toRow(figures));
           }
         } else {
           walk(node.children[i]);
