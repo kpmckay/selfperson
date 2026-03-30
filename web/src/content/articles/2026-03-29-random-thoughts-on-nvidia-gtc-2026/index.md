@@ -2,6 +2,7 @@
 date: 2026-03-29
 title: "Random Thoughts on NVIDIA GTC 2026"
 description: "Random Thoughts on NVIDIA GTC 2026"
+tag: "Article"
 ---
 
 GTC 2026 is in the books and it was certainly an interesting year. The exhibit hall was jam packed and spilled over to an outdoor space where my employer (ScaleFlux) had a booth. This coincided with an unusual March heatwave in San Jose, but NVIDIA made the best of it by bringing in a (free) Mr. Softee truck and plenty of umbrellas. 
@@ -36,8 +37,7 @@ I didn't quite get too many rack-level pictures, but here is a Vera Rubin NVL72 
 ![NVL72](./images/vr_nvl72.jpg)
 ![Google A4 Max](./images/google_a4_max.jpg)
 
-Of course, there were many other things to see. Being in memory, the HBM4 and NAND wafers brought by were neat to look at. 
-
+Of course, there were many other things to see. Being a memory geek at heart, the HBM4 and NAND wafers brought by various vendors were neat to look at.
 
 ![](./images/hbm4.jpg)
 ![](./images/hbm4e.jpg)
